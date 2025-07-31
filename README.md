@@ -1,6 +1,6 @@
 # 🎸 RockMap
 
-[![RockMap Logo](assets/img/rockmap-logo.png)](https://randomizer.github.io/rockmap/)
+![RockMap Logo](https://raw.githubusercontent.com/randomizer/rockmap/main/assets/img/rockmap-logo.png)
 
 RockMap is an interactive map visualizing concerts for active rock and metal bands.  
 The project fetches event data from external APIs (e.g., Bandsintown) and displays the shows on a Leaflet-based map.
