@@ -1,5 +1,8 @@
 # RockMap 🎸🗺️
 
+![RockMap logga](assets/img/rockmap-logo.png)
+
+
 RockMap is an interactive web map that shows where major bands are performing concerts around the world.
 
 🌐 **Live demo:** [https://randomizer.github.io/rockmap/](https://randomizer.github.io/rockmap/)
