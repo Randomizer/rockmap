@@ -1,15 +1,21 @@
-# RockMap 🎸🗺️
 
-En interaktiv karta som visar var stora band spelar konserter.
+---
 
-## Funktioner
-- Visa konserter på Mapbox-karta
-- Filtrera per månad och land (dynamiskt genererade filter)
-- Popup med information och biljettlänk
+## Roadmap
 
-## Så använder du
-1. Öppna `index.html` i webbläsare – allt fungerar lokalt.
-2. Eller ladda upp till ett GitHub-repo och aktivera GitHub Pages.
+- [ ] Artist filtering  
+- [ ] Band logos in popups  
+- [ ] Clustering for dense city areas  
+- [ ] Automatic data updates via Bandsintown API  
+- [ ] Hosting under a custom domain (rockmap.com)
 
-Byggd med HTML + JavaScript + Mapbox GL JS.
+---
 
+## Credits
+
+- [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js) for map rendering  
+- Concert data: Sample/mock data for now (can be replaced with Bandsintown or Ticketmaster API)
+
+---
+
+🎸 **RockMap is live and evolving – enjoy exploring the world of live music!**
