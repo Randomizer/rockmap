@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockMap v0.3.1 (Light)</title>
+  <title>RockMap v0.3.2 (Hover markers)</title>
   <link rel="icon" href="data:,">
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
   <style>
@@ -29,20 +29,32 @@
       :root { --panel-w: 160px; }
       #controls select, #controls button { font-size: 12px; padding: 6px; }
     }
-    /* Guitar marker tuned for light map */
+    /* Guitar marker with hover variant + pulse ring */
     .guitar-marker {
-      width: 30px;
-      height: 30px;
-      background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3C%21--%20neck%20--%3E%0A%20%20%3Crect%20x%3D%2736%27%20y%3D%278%27%20width%3D%2710%27%20height%3D%2722%27%20fill%3D%27%23f2f2f2%27%20stroke%3D%27%23999%27%20stroke-width%3D%271%27/%3E%0A%20%20%3C%21--%20head%20--%3E%0A%20%20%3Crect%20x%3D%2746%27%20y%3D%276%27%20width%3D%278%27%20height%3D%276%27%20rx%3D%271%27%20fill%3D%27%23e6e6e6%27%20stroke%3D%27%23888%27%20stroke-width%3D%271%27/%3E%0A%20%20%3C%21--%20body%20--%3E%0A%20%20%3Cellipse%20cx%3D%2722%27%20cy%3D%2744%27%20rx%3D%2716%27%20ry%3D%2714%27%20fill%3D%27%23ff4d4d%27%20stroke%3D%27%23a52a2a%27%20stroke-width%3D%272%27/%3E%0A%20%20%3Ccircle%20cx%3D%2722%27%20cy%3D%2744%27%20r%3D%276%27%20fill%3D%27%23ffffff%27%20stroke%3D%27%23888%27%20stroke-width%3D%271%27%20/%3E%0A%3C/svg%3E');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
+      width: 30px; height: 30px; position: relative;
+      background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3Crect%20x%3D%2736%27%20y%3D%278%27%20width%3D%2710%27%20height%3D%2722%27%20fill%3D%27%23f2f2f2%27%20stroke%3D%27%23999%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Crect%20x%3D%2746%27%20y%3D%276%27%20width%3D%278%27%20height%3D%276%27%20rx%3D%271%27%20fill%3D%27%23e6e6e6%27%20stroke%3D%27%23888%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Cellipse%20cx%3D%2722%27%20cy%3D%2744%27%20rx%3D%2716%27%20ry%3D%2714%27%20fill%3D%27%23ff4d4d%27%20stroke%3D%27%23a52a2a%27%20stroke-width%3D%272%27/%3E%0A%20%20%3Ccircle%20cx%3D%2722%27%20cy%3D%2744%27%20r%3D%276%27%20fill%3D%27%23ffffff%27%20stroke%3D%27%23888%27%20stroke-width%3D%271%27%20/%3E%0A%3C/svg%3E');
+      background-size: contain; background-repeat: no-repeat; background-position: center;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,.35));
       transform-origin: bottom center;
-      transition: transform .15s ease, filter .15s ease;
+      transition: transform .12s ease, filter .12s ease, background-image .12s ease;
       cursor: pointer;
     }
-    .guitar-marker:hover { transform: scale(1.08); filter: drop-shadow(0 4px 8px rgba(0,0,0,.45)); }
+    .guitar-marker.hover {
+      background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3Crect%20x%3D%2736%27%20y%3D%278%27%20width%3D%2710%27%20height%3D%2722%27%20fill%3D%27%23fff7e0%27%20stroke%3D%27%238a6d3b%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Crect%20x%3D%2746%27%20y%3D%276%27%20width%3D%278%27%20height%3D%276%27%20rx%3D%271%27%20fill%3D%27%23ffefc2%27%20stroke%3D%27%2380652f%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Cellipse%20cx%3D%2722%27%20cy%3D%2744%27%20rx%3D%2716%27%20ry%3D%2714%27%20fill%3D%27%23ffcc33%27%20stroke%3D%27%23d4a017%27%20stroke-width%3D%272%27/%3E%0A%20%20%3Ccircle%20cx%3D%2722%27%20cy%3D%2744%27%20r%3D%276%27%20fill%3D%27%23ffffff%27%20stroke%3D%27%238a6d3b%27%20stroke-width%3D%271%27%20/%3E%0A%3C/svg%3E');
+      transform: scale(1.12);
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.5));
+    }
+    .guitar-marker.hover::after {
+      content: '';
+      position: absolute; left: 50%; top: 55%;
+      width: 10px; height: 10px; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 0 rgba(255, 204, 51, .6);
+      animation: pulse 900ms ease-out forwards;
+    }
+    @keyframes pulse {
+      to { box-shadow: 0 0 0 16px rgba(255, 204, 51, 0); }
+    }
     .mapboxgl-popup-content { font-size: 14px; font-family: inherit; }
     .btn { display: inline-block; margin-top: 6px; padding: 6px 10px; border-radius: 6px; text-decoration: none; color: #fff; background: var(--accent); }
     .btn:hover { filter: brightness(1.05); }
@@ -73,7 +85,7 @@
 
     const map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v12', // LIGHTER default style
+      style: 'mapbox://styles/mapbox/streets-v12',
       center: [10, 50],
       zoom: 3
     });
@@ -122,6 +134,15 @@
       const el = document.createElement('div');
       el.className = 'guitar-marker';
       el.title = title || '';
+
+      const addHover = () => el.classList.add('hover');
+      const removeHover = () => el.classList.remove('hover');
+
+      el.addEventListener('mouseenter', addHover);
+      el.addEventListener('mouseleave', removeHover);
+      el.addEventListener('touchstart', addHover, {passive: true});
+      el.addEventListener('touchend', removeHover, {passive: true});
+
       return el;
     }
 
@@ -129,12 +150,18 @@
       clearMarkers();
       events.forEach(e => {
         const el = guitarMarkerEl(`${e.artist} — ${e.venue}, ${e.city}`);
+        const popup = new mapboxgl.Popup().setHTML(
+          `<strong>${e.artist}</strong><br>${e.venue}, ${e.city}<br>${fmtDate(e.date)}<br><a class='btn' href='${e.ticket_url}' target='_blank' rel='noopener'>Tickets</a>`
+        );
+
         const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' })
           .setLngLat([e.lon, e.lat])
-          .setPopup(new mapboxgl.Popup().setHTML(
-            `<strong>${e.artist}</strong><br>${e.venue}, ${e.city}<br>${fmtDate(e.date)}<br><a class='btn' href='${e.ticket_url}' target='_blank' rel='noopener'>Tickets</a>`
-          ))
+          .setPopup(popup)
           .addTo(map);
+
+        popup.on('open', () => el.classList.add('hover'));
+        popup.on('close', () => el.classList.remove('hover'));
+
         markers.push(marker);
       });
     }
