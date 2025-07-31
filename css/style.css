@@ -3,6 +3,5 @@
   color: #e6e6e6;
   box-shadow: 0 4px 24px rgba(0,0,0,.45);
 }
-.rockmap-popup .leaflet-popup-tip {
-  background: #1c1f26;
-}
+.rockmap-popup .leaflet-popup-tip { background: #1c1f26; }
+body { margin: 0; }
