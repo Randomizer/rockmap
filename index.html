@@ -4,13 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RockMap</title>
-  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Lägg på versionssuffix (?v=...) för att undvika cacheproblem -->
+  <link rel="stylesheet" href="css/style.css?v=2025-07-31-3" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
   <div id="map" style="width:100%;height:100vh;"></div>
-  <script src="js/bandImages.js"></script>
-  <script src="js/main.js"></script>
+
+  <!-- Viktigt: ladda bandImages före main -->
+  <script src="js/bandImages.js?v=2025-07-31-3"></script>
+  <script src="js/main.js?v=2025-07-31-3"></script>
 </body>
 </html>
