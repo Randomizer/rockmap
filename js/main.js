@@ -1,6 +1,6 @@
 // RockMap main.js — Light base map + vintage tone + SVG icon + Spotify + logo
 // ASCII-safe version (no template literals). Last update: 2025-08-01
-var V = "2025-08-01-ascii-5";
+var V = "2025-08-01-ascii-8";
 
 async function initRockMap() {
   console.log("RockMap: main.js loaded (", V, ")");
