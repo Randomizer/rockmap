@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockMap v0.3.2 (Hover markers)</title>
+  <title>RockMap v0.3.3 (Hover fix)</title>
   <link rel="icon" href="data:,">
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
   <style>
-    :root { --panel-w: 200px; --accent: #ff4d4d; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans'; }
-    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-    #controls {
+    :root {{ --panel-w: 200px; --accent: #ff4d4d; }}
+    body {{ margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans'; }}
+    #map {{ position: absolute; top: 0; bottom: 0; width: 100%; }}
+    #controls {{
       position: absolute; top: 10px; left: 10px; z-index: 1;
       width: var(--panel-w);
       background: rgba(255,255,255,.96);
@@ -18,46 +18,52 @@
       box-shadow: 0 8px 24px rgba(0,0,0,.18);
       padding: 12px;
       display: flex; flex-direction: column; gap: 8px;
-    }
-    #controls label { font-size: 12px; color: #333; }
-    #controls select, #controls button {
+    }}
+    #controls label {{ font-size: 12px; color: #333; }}
+    #controls select, #controls button {{
       width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 14px;
-    }
-    #resetBtn { background: #f6f6f6; cursor: pointer; }
-    #resetBtn:hover { background: #efefef; }
-    @media (max-width: 540px) {
-      :root { --panel-w: 160px; }
-      #controls select, #controls button { font-size: 12px; padding: 6px; }
-    }
-    /* Guitar marker with hover variant + pulse ring */
-    .guitar-marker {
-      width: 30px; height: 30px; position: relative;
+    }}
+    #resetBtn {{ background: #f6f6f6; cursor: pointer; }}
+    #resetBtn:hover {{ background: #efefef; }}
+    @media (max-width: 540px) {{
+      :root {{ --panel-w: 160px; }}
+      #controls select, #controls button {{ font-size: 12px; padding: 6px; }}
+    }}
+    /* Marker container (Mapbox updates transform on this element) */
+    .marker {{ 
+      width: 32px; height: 32px; 
+      /* IMPORTANT: no transform/transition on the container to avoid lag during pan */
+      pointer-events: auto;
+    }}
+    /* Inner icon that we animate on hover */
+    .marker .icon {{
+      width: 100%; height: 100%;
       background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3Crect%20x%3D%2736%27%20y%3D%278%27%20width%3D%2710%27%20height%3D%2722%27%20fill%3D%27%23f2f2f2%27%20stroke%3D%27%23999%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Crect%20x%3D%2746%27%20y%3D%276%27%20width%3D%278%27%20height%3D%276%27%20rx%3D%271%27%20fill%3D%27%23e6e6e6%27%20stroke%3D%27%23888%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Cellipse%20cx%3D%2722%27%20cy%3D%2744%27%20rx%3D%2716%27%20ry%3D%2714%27%20fill%3D%27%23ff4d4d%27%20stroke%3D%27%23a52a2a%27%20stroke-width%3D%272%27/%3E%0A%20%20%3Ccircle%20cx%3D%2722%27%20cy%3D%2744%27%20r%3D%276%27%20fill%3D%27%23ffffff%27%20stroke%3D%27%23888%27%20stroke-width%3D%271%27%20/%3E%0A%3C/svg%3E');
       background-size: contain; background-repeat: no-repeat; background-position: center;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,.35));
-      transform-origin: bottom center;
       transition: transform .12s ease, filter .12s ease, background-image .12s ease;
-      cursor: pointer;
-    }
-    .guitar-marker.hover {
+      transform-origin: bottom center;
+      position: relative;
+      display: block;
+    }}
+    .marker.hover .icon {{
       background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3Crect%20x%3D%2736%27%20y%3D%278%27%20width%3D%2710%27%20height%3D%2722%27%20fill%3D%27%23fff7e0%27%20stroke%3D%27%238a6d3b%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Crect%20x%3D%2746%27%20y%3D%276%27%20width%3D%278%27%20height%3D%276%27%20rx%3D%271%27%20fill%3D%27%23ffefc2%27%20stroke%3D%27%2380652f%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Cellipse%20cx%3D%2722%27%20cy%3D%2744%27%20rx%3D%2716%27%20ry%3D%2714%27%20fill%3D%27%23ffcc33%27%20stroke%3D%27%23d4a017%27%20stroke-width%3D%272%27/%3E%0A%20%20%3Ccircle%20cx%3D%2722%27%20cy%3D%2744%27%20r%3D%276%27%20fill%3D%27%23ffffff%27%20stroke%3D%27%238a6d3b%27%20stroke-width%3D%271%27%20/%3E%0A%3C/svg%3E');
       transform: scale(1.12);
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.5));
-    }
-    .guitar-marker.hover::after {
-      content: '';
-      position: absolute; left: 50%; top: 55%;
+    }}
+    .marker.hover .icon::after {{
+      content: ''; position: absolute; left: 50%; top: 55%;
       width: 10px; height: 10px; border-radius: 50%;
       transform: translate(-50%, -50%);
       box-shadow: 0 0 0 0 rgba(255, 204, 51, .6);
       animation: pulse 900ms ease-out forwards;
-    }
-    @keyframes pulse {
-      to { box-shadow: 0 0 0 16px rgba(255, 204, 51, 0); }
-    }
-    .mapboxgl-popup-content { font-size: 14px; font-family: inherit; }
-    .btn { display: inline-block; margin-top: 6px; padding: 6px 10px; border-radius: 6px; text-decoration: none; color: #fff; background: var(--accent); }
-    .btn:hover { filter: brightness(1.05); }
+    }}
+    @keyframes pulse {{
+      to {{ box-shadow: 0 0 0 16px rgba(255, 204, 51, 0); }}
+    }}
+    .mapboxgl-popup-content {{ font-size: 14px; font-family: inherit; }}
+    .btn {{ display: inline-block; margin-top: 6px; padding: 6px 10px; border-radius: 6px; text-decoration: none; color: #fff; background: var(--accent); }}
+    .btn:hover {{ filter: brightness(1.05); }}
   </style>
 </head>
 <body>
@@ -83,27 +89,27 @@
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiYXJhbmV0IiwiYSI6ImNtZHI1eHoxNjBkeDkybnNibm9nMmpiOGoifQ.fAtpWpVeQgSG8XivujRiHw';
 
-    const map = new mapboxgl.Map({
+    const map = new mapboxgl.Map({{
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v12',
       center: [10, 50],
       zoom: 3
-    });
+    }});
 
     map.on('error', e => console.error('Mapbox error:', e && e.error && e.error.message, e));
 
     let allData = [];
     let markers = [];
 
-    function fmtDate(iso) {
-      try {
+    function fmtDate(iso) {{
+      try {{
         const d = new Date(iso);
-        const fmt = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        const fmt = d.toLocaleDateString('en-GB', {{ day: '2-digit', month: 'short', year: 'numeric' }});
         return fmt.replace(/\./g, '');
-      } catch { return iso; }
-    }
+      }} catch {{ return iso; }}
+    }}
 
-    function populateFilters(data) {
+    function populateFilters(data) {{
       const artists = [...new Set(data.map(e => e.artist))].sort();
       const countries = [...new Set(data.map(e => e.country))].sort();
       const months = [...new Set(data.map(e => e.date.slice(0,7)))].sort();
@@ -112,12 +118,12 @@
       const cSel = document.getElementById('countrySelect');
       const mSel = document.getElementById('monthSelect');
 
-      artists.forEach(v => aSel.innerHTML += `<option>${v}</option>`);
-      countries.forEach(v => cSel.innerHTML += `<option>${v}</option>`);
-      months.forEach(v => mSel.innerHTML += `<option>${v}</option>`);
-    }
+      artists.forEach(v => aSel.innerHTML += `<option>${{v}}</option>`);
+      countries.forEach(v => cSel.innerHTML += `<option>${{v}}</option>`);
+      months.forEach(v => mSel.innerHTML += `<option>${{v}}</option>`);
+    }}
 
-    function filterEvents(data) {
+    function filterEvents(data) {{
       const a = document.getElementById('artistSelect').value;
       const c = document.getElementById('countrySelect').value;
       const m = document.getElementById('monthSelect').value;
@@ -126,35 +132,39 @@
         (c === 'All' || e.country === c) &&
         (m === 'All' || e.date.startsWith(m))
       );
-    }
+    }}
 
-    function clearMarkers() { markers.forEach(m => m.remove()); markers = []; }
+    function clearMarkers() {{ markers.forEach(m => m.remove()); markers = []; }}
 
-    function guitarMarkerEl(title) {
-      const el = document.createElement('div');
-      el.className = 'guitar-marker';
-      el.title = title || '';
+    function buildMarkerEl(title) {{
+      const container = document.createElement('div');
+      container.className = 'marker';
+      container.title = title || '';
 
-      const addHover = () => el.classList.add('hover');
-      const removeHover = () => el.classList.remove('hover');
+      const icon = document.createElement('div');
+      icon.className = 'icon';
+      container.appendChild(icon);
 
-      el.addEventListener('mouseenter', addHover);
-      el.addEventListener('mouseleave', removeHover);
-      el.addEventListener('touchstart', addHover, {passive: true});
-      el.addEventListener('touchend', removeHover, {passive: true});
+      const addHover = () => container.classList.add('hover');
+      const removeHover = () => container.classList.remove('hover');
 
-      return el;
-    }
+      container.addEventListener('mouseenter', addHover);
+      container.addEventListener('mouseleave', removeHover);
+      container.addEventListener('touchstart', addHover, {{passive: true}});
+      container.addEventListener('touchend', removeHover, {{passive: true}});
 
-    function updateMap(events) {
+      return container;
+    }}
+
+    function updateMap(events) {{
       clearMarkers();
-      events.forEach(e => {
-        const el = guitarMarkerEl(`${e.artist} — ${e.venue}, ${e.city}`);
+      events.forEach(e => {{
+        const el = buildMarkerEl(`${{e.artist}} — ${{e.venue}}, ${{e.city}}`);
         const popup = new mapboxgl.Popup().setHTML(
-          `<strong>${e.artist}</strong><br>${e.venue}, ${e.city}<br>${fmtDate(e.date)}<br><a class='btn' href='${e.ticket_url}' target='_blank' rel='noopener'>Tickets</a>`
+          `<strong>${{e.artist}}</strong><br>${{e.venue}}, ${{e.city}}<br>${{fmtDate(e.date)}}<br><a class='btn' href='${{e.ticket_url}}' target='_blank' rel='noopener'>Tickets</a>`
         );
 
-        const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' })
+        const marker = new mapboxgl.Marker({{ element: el, anchor: 'bottom' }})
           .setLngLat([e.lon, e.lat])
           .setPopup(popup)
           .addTo(map);
@@ -163,38 +173,38 @@
         popup.on('close', () => el.classList.remove('hover'));
 
         markers.push(marker);
-      });
-    }
+      }});
+    }}
 
-    function zoomTo(events) {
-      if (!events || events.length === 0) { map.easeTo({ center: [10,50], zoom: 3, duration: 600 }); return; }
-      if (events.length === 1) { const e = events[0]; map.easeTo({ center: [e.lon, e.lat], zoom: 6, duration: 600 }); return; }
+    function zoomTo(events) {{
+      if (!events || events.length === 0) {{ map.easeTo({{ center: [10,50], zoom: 3, duration: 600 }}); return; }}
+      if (events.length === 1) {{ const e = events[0]; map.easeTo({{ center: [e.lon, e.lat], zoom: 6, duration: 600 }}); return; }}
       const b = new mapboxgl.LngLatBounds();
       events.forEach(e => b.extend([e.lon, e.lat]));
-      map.fitBounds(b, { padding: 80, duration: 600 });
-    }
+      map.fitBounds(b, {{ padding: 80, duration: 600 }});
+    }}
 
-    function refresh() {
+    function refresh() {{
       const f = filterEvents(allData);
       updateMap(f);
       zoomTo(f);
-    }
+    }}
 
-    map.on('load', () => {
+    map.on('load', () => {{
       fetch('events.json')
         .then(r => r.json())
-        .then(data => { allData = data; populateFilters(allData); refresh(); });
-    });
+        .then(data => {{ allData = data; populateFilters(allData); refresh(); }});
+    }});
 
     document.getElementById('artistSelect').addEventListener('change', refresh);
     document.getElementById('countrySelect').addEventListener('change', refresh);
     document.getElementById('monthSelect').addEventListener('change', refresh);
-    document.getElementById('resetBtn').addEventListener('click', () => {
+    document.getElementById('resetBtn').addEventListener('click', () => {{
       document.getElementById('artistSelect').value = 'All';
       document.getElementById('countrySelect').value = 'All';
       document.getElementById('monthSelect').value = 'All';
       refresh();
-    });
+    }});
   </script>
 </body>
 </html>
