@@ -1,28 +1,88 @@
 async function initRockMap() {
-  const map = L.map('map').setView([50, 10], 4);
-
+  // Initiera kartan
+  const map = L.map('map').setView([54, 10], 4);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; OpenStreetMap &copy; CARTO',
     subdomains: 'abcd',
     maxZoom: 19
   }).addTo(map);
 
-  const bands = await (await fetch('data/bands.json')).json();
-  for (const band of bands) {
-    const lat = 50 + Math.random() * 20 - 10; 
-    const lon = 10 + Math.random() * 20 - 10;
+  // Hjälpfunktion för datum
+  const fmtDate = (d) => {
+    try {
+      const dt = new Date(d);
+      return isNaN(dt) ? (d || '') : dt.toLocaleDateString('sv-SE', { year: 'numeric', month: 'short', day: 'numeric' });
+    } catch { return d || ''; }
+  };
 
-    const imageUrl = await resolveBandImage(band.name);
+  // Försök läsa events.json i roten
+  let events = [];
+  try {
+    const er = await fetch('events.json?v=2025-07-31');
+    if (er.ok) {
+      events = await er.json();
+    }
+  } catch {}
 
-    L.marker([lat, lon], { title: band.name })
-      .bindPopup(`
+  // Läs bandlistan (enda “source of truth”)
+  const bandsRes = await fetch('data/bands.json?v=2025-07-31');
+  const bands = await bandsRes.json();
+  console.log('Bands loaded:', bands.length, bands.map(b => b.name));
+
+  // Om vi har events med koordinater -> plotta dem
+  const hasGeoEvents = Array.isArray(events) && events.some(e => e?.venue?.latitude && e?.venue?.longitude);
+  if (hasGeoEvents) {
+    console.log('Events with coordinates found:', events.length);
+
+    for (const e of events) {
+      const lat = parseFloat(e?.venue?.latitude);
+      const lon = parseFloat(e?.venue?.longitude);
+      if (!isFinite(lat) || !isFinite(lon)) continue;
+
+      const name = e.artist || (e.lineup && e.lineup[0]) || 'Okänt band';
+      const imgUrl = e.imageUrl ? e.imageUrl : await resolveBandImage(name);
+
+      const venue = e?.venue?.name || '';
+      const city = [e?.venue?.city, e?.venue?.country].filter(Boolean).join(', ');
+      const date = fmtDate(e?.datetime || e?.date);
+
+      const html = `
+        <div style="text-align:center; max-width:240px;">
+          <strong>${name}</strong><br>
+          <img src="${imgUrl}" alt="${name}"
+               style="width:220px;max-width:100%;border-radius:6px;margin:6px 0;"
+               onerror="this.style.display='none'">
+          <div style="font-size:12px;opacity:.9;line-height:1.3;">
+            ${venue ? venue + '<br>' : ''}
+            ${city ? city + '<br>' : ''}
+            ${date}
+          </div>
+        </div>`;
+
+      L.marker([lat, lon], { title: name })
+        .bindPopup(html, { className: 'rockmap-popup', maxWidth: 280 })
+        .addTo(map);
+    }
+  } else {
+    // Fallback: demo-markörer för bandlistan
+    console.log('No events with coordinates found. Falling back to demo markers from bands.json.');
+    for (const band of bands) {
+      const lat = 50 + Math.random() * 20 - 10; // DEMO
+      const lon = 10 + Math.random() * 20 - 10; // DEMO
+      const imageUrl = await resolveBandImage(band.name);
+
+      const html = `
         <div style="text-align:center; max-width:220px;">
           <strong>${band.name}</strong><br>
           <img src="${imageUrl}" alt="${band.name}" 
-               style="width:220px;max-width:100%;border-radius:6px;margin-top:4px;">
-        </div>
-      `, { className: 'rockmap-popup', maxWidth: 260 })
-      .addTo(map);
+               style="width:220px;max-width:100%;border-radius:6px;margin-top:4px;"
+               onerror="this.style.display='none'">
+        </div>`;
+
+      L.marker([lat, lon], { title: band.name })
+        .bindPopup(html, { className: 'rockmap-popup', maxWidth: 260 })
+        .addTo(map);
+    }
   }
 }
 
