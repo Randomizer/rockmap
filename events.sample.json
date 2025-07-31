@@ -1,0 +1,35 @@
+[
+  {
+    "artist": "Metallica",
+    "datetime": "2025-08-10T20:00:00",
+    "venue": {
+      "name": "Friends Arena",
+      "city": "Stockholm",
+      "country": "Sweden",
+      "latitude": 59.372,
+      "longitude": 18.000
+    }
+  },
+  {
+    "artist": "Iron Maiden",
+    "datetime": "2025-07-15T20:00:00",
+    "venue": {
+      "name": "Ullevi",
+      "city": "Gothenburg",
+      "country": "Sweden",
+      "latitude": 57.721,
+      "longitude": 11.991
+    }
+  },
+  {
+    "artist": "Rammstein",
+    "datetime": "2025-09-05T21:00:00",
+    "venue": {
+      "name": "Olympiastadion",
+      "city": "Berlin",
+      "country": "Germany",
+      "latitude": 52.514,
+      "longitude": 13.239
+    }
+  }
+]
