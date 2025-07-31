@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockMap v0.3.3 (Hover fix)</title>
+  <title>RockMap v0.3.3c (Hover fix + syntax)</title>
   <link rel="icon" href="data:,">
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
   <style>
@@ -29,22 +29,14 @@
       :root {{ --panel-w: 160px; }}
       #controls select, #controls button {{ font-size: 12px; padding: 6px; }}
     }}
-    /* Marker container (Mapbox updates transform on this element) */
-    .marker {{ 
-      width: 32px; height: 32px; 
-      /* IMPORTANT: no transform/transition on the container to avoid lag during pan */
-      pointer-events: auto;
-    }}
-    /* Inner icon that we animate on hover */
+    .marker {{ width: 32px; height: 32px; pointer-events: auto; }}
     .marker .icon {{
       width: 100%; height: 100%;
       background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3Crect%20x%3D%2736%27%20y%3D%278%27%20width%3D%2710%27%20height%3D%2722%27%20fill%3D%27%23f2f2f2%27%20stroke%3D%27%23999%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Crect%20x%3D%2746%27%20y%3D%276%27%20width%3D%278%27%20height%3D%276%27%20rx%3D%271%27%20fill%3D%27%23e6e6e6%27%20stroke%3D%27%23888%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Cellipse%20cx%3D%2722%27%20cy%3D%2744%27%20rx%3D%2716%27%20ry%3D%2714%27%20fill%3D%27%23ff4d4d%27%20stroke%3D%27%23a52a2a%27%20stroke-width%3D%272%27/%3E%0A%20%20%3Ccircle%20cx%3D%2722%27%20cy%3D%2744%27%20r%3D%276%27%20fill%3D%27%23ffffff%27%20stroke%3D%27%23888%27%20stroke-width%3D%271%27%20/%3E%0A%3C/svg%3E');
       background-size: contain; background-repeat: no-repeat; background-position: center;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,.35));
       transition: transform .12s ease, filter .12s ease, background-image .12s ease;
-      transform-origin: bottom center;
-      position: relative;
-      display: block;
+      transform-origin: bottom center; position: relative; display: block;
     }}
     .marker.hover .icon {{
       background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3Crect%20x%3D%2736%27%20y%3D%278%27%20width%3D%2710%27%20height%3D%2722%27%20fill%3D%27%23fff7e0%27%20stroke%3D%27%238a6d3b%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Crect%20x%3D%2746%27%20y%3D%276%27%20width%3D%278%27%20height%3D%276%27%20rx%3D%271%27%20fill%3D%27%23ffefc2%27%20stroke%3D%27%2380652f%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Cellipse%20cx%3D%2722%27%20cy%3D%2744%27%20rx%3D%2716%27%20ry%3D%2714%27%20fill%3D%27%23ffcc33%27%20stroke%3D%27%23d4a017%27%20stroke-width%3D%272%27/%3E%0A%20%20%3Ccircle%20cx%3D%2722%27%20cy%3D%2744%27%20r%3D%276%27%20fill%3D%27%23ffffff%27%20stroke%3D%27%238a6d3b%27%20stroke-width%3D%271%27%20/%3E%0A%3C/svg%3E');
@@ -58,9 +50,7 @@
       box-shadow: 0 0 0 0 rgba(255, 204, 51, .6);
       animation: pulse 900ms ease-out forwards;
     }}
-    @keyframes pulse {{
-      to {{ box-shadow: 0 0 0 16px rgba(255, 204, 51, 0); }}
-    }}
+    @keyframes pulse {{ to {{ box-shadow: 0 0 0 16px rgba(255, 204, 51, 0); }} }}
     .mapboxgl-popup-content {{ font-size: 14px; font-family: inherit; }}
     .btn {{ display: inline-block; margin-top: 6px; padding: 6px 10px; border-radius: 6px; text-decoration: none; color: #fff; background: var(--accent); }}
     .btn:hover {{ filter: brightness(1.05); }}
@@ -118,9 +108,9 @@
       const cSel = document.getElementById('countrySelect');
       const mSel = document.getElementById('monthSelect');
 
-      artists.forEach(v => aSel.innerHTML += `<option>${{v}}</option>`);
-      countries.forEach(v => cSel.innerHTML += `<option>${{v}}</option>`);
-      months.forEach(v => mSel.innerHTML += `<option>${{v}}</option>`);
+      artists.forEach(v => {{ const o=document.createElement('option'); o.textContent=v; aSel.appendChild(o); }});
+      countries.forEach(v => {{ const o=document.createElement('option'); o.textContent=v; cSel.appendChild(o); }});
+      months.forEach(v => {{ const o=document.createElement('option'); o.textContent=v; mSel.appendChild(o); }});
     }}
 
     function filterEvents(data) {{
