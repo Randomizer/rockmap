@@ -1,23 +1,41 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
   <title>RockMap</title>
 
-  <!-- Lägg på versionssuffix (?v=...) för att undvika cacheproblem -->
-  <link rel="stylesheet" href="css/style.css?v=2025-07-31-3" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Din lokala CSS (lägg gärna ett versionssuffix för cache-busting) -->
+  <link rel="stylesheet" href="css/style.css?v=2025-08-01-a" />
+
+  <!-- Leaflet CSS/JS från CDN -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    /* Säkerställ att kartan fyller skärmen även utan extern CSS */
+    html, body { height: 100%; margin: 0; }
+    #map { width: 100%; height: 100vh; }
+  </style>
 </head>
 <body>
-  <div id="map" style="width:100%;height:100vh;"></div>
+  <noscript>
+    RockMap kräver JavaScript för att fungera. Vänligen aktivera JavaScript i din
+    webbläsare.
+  </noscript>
 
-  <!-- Viktigt: ladda bandImages före main -->
-  <script src="js/bandImages.js?v=2025-07-31-3"></script>
-  <script src="js/main.js?v=2025-08-01-ascii-8"></script>
+  <div id="map"></div>
 
+  <!-- Viktigt: bandImages före main -->
+  <script src="js/bandImages.js?v=2025-08-01-a"></script>
 
-
+  <!-- Huvudskript med filnamns-versionering (bypassar CDN-cache) -->
+  <script src="js/main.v2025-08-01-ascii-8.js"></script>
 </body>
 </html>
