@@ -45,7 +45,7 @@ rockmap/
 └─ events.json
 
 
----
+----
 
 ## ⚡ Tips
 
