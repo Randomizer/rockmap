@@ -7,36 +7,26 @@
     "country": "Germany",
     "lat": 52.5146,
     "lon": 13.2392,
-    "ticket_url": "https://example.com/tickets/metallica-berlin"
+    "ticket_url": "https://example.com/metallica-berlin"
   },
   {
     "artist": "Coldplay",
-    "date": "2025-08-15",
-    "venue": "Stade de France",
-    "city": "Paris",
-    "country": "France",
-    "lat": 48.9245,
-    "lon": 2.3601,
-    "ticket_url": "https://example.com/tickets/coldplay-paris"
-  },
-  {
-    "artist": "Rammstein",
-    "date": "2025-08-20",
+    "date": "2025-09-03",
     "venue": "Friends Arena",
     "city": "Stockholm",
     "country": "Sweden",
-    "lat": 59.3727,
-    "lon": 18.0009,
-    "ticket_url": "https://example.com/tickets/rammstein-stockholm"
+    "lat": 59.3729,
+    "lon": 18.0003,
+    "ticket_url": "https://example.com/coldplay-stockholm"
   },
   {
     "artist": "The Killers",
-    "date": "2025-09-05",
+    "date": "2025-10-01",
     "venue": "3Arena",
     "city": "Dublin",
     "country": "Ireland",
-    "lat": 53.3489,
-    "lon": -6.2288,
-    "ticket_url": "https://example.com/tickets/the-killers-dublin"
+    "lat": 53.348,
+    "lon": -6.2285,
+    "ticket_url": "https://example.com/killers-dublin"
   }
 ]
