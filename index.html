@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockMap</title>
+  <title>RockMap v0.2.2</title>
+  <link rel="icon" href="data:,">
   <style>
     body { margin: 0; font-family: sans-serif; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
@@ -11,17 +12,24 @@
       position: absolute; top: 10px; left: 10px;
       background: white; padding: 10px; border-radius: 6px;
       z-index: 1; box-shadow: 0 0 5px rgba(0,0,0,0.3);
+      display: flex; flex-direction: column; gap: 5px;
+      width: 160px;
     }
     #controls select, #controls button {
-      margin-bottom: 5px; width: 150px;
+      width: 100%;
+      padding: 5px;
+    }
+    @media (max-width: 500px) {
+      #controls { width: 130px; padding: 6px; }
+      #controls select, #controls button { font-size: 12px; padding: 3px; }
     }
   </style>
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
 </head>
 <body>
 <div id="controls">
-  <button id="resetBtn">Reset Filters</button><br><br>
-  <select id="countrySelect"><option>All</option></select><br>
+  <button id="resetBtn">Reset Filters</button>
+  <select id="countrySelect"><option>All</option></select>
   <select id="monthSelect"><option>All</option></select>
 </div>
 <div id="map"></div>
@@ -34,6 +42,9 @@ const map = new mapboxgl.Map({
   center: [10, 50],
   zoom: 3
 });
+
+// Log any map errors
+map.on('error', e => console.error('Mapbox error:', e && e.error));
 
 let allData = [];
 
@@ -85,7 +96,6 @@ function zoomTo(events) {
   }
   const bounds = new mapboxgl.LngLatBounds();
   events.forEach(e => bounds.extend([e.lon, e.lat]));
-  // Removed maxZoom cap so fitBounds can zoom in properly for small extents
   map.fitBounds(bounds, { padding: 60, duration: 800 });
 }
 
