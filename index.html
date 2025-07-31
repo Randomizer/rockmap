@@ -3,58 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockMap v0.2.2</title>
+  <title>RockMap v0.2.3</title>
   <link rel="icon" href="data:,">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
   <style>
-    body { margin: 0; font-family: sans-serif; }
+    :root {
+      --marker-size: 28px;
+      --marker-size-hover: 34px;
+    }
+    body { margin: 0; font-family: system-ui, sans-serif; }
     #map { position: absolute; top: 0; bottom: 0; width: 100%; }
     #controls {
       position: absolute; top: 10px; left: 10px;
-      background: white; padding: 10px; border-radius: 6px;
-      z-index: 1; box-shadow: 0 0 5px rgba(0,0,0,0.3);
-      display: flex; flex-direction: column; gap: 5px;
-      width: 160px;
+      background: white; padding: 10px; border-radius: 8px;
+      z-index: 1; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+      display: flex; flex-direction: column; gap: 6px; width: 170px;
     }
-    #controls select, #controls button {
-      width: 100%;
-      padding: 5px;
-    }
+    #controls select, #controls button { width: 100%; padding: 6px; font-size: 14px; }
     @media (max-width: 500px) {
-      #controls { width: 130px; padding: 6px; }
-      #controls select, #controls button { font-size: 12px; padding: 3px; }
+      #controls { width: 140px; padding: 8px; gap: 6px; }
+      #controls select, #controls button { font-size: 12px; padding: 4px; }
     }
+    /* Guitar marker */
+    .guitar-marker {
+      width: var(--marker-size);
+      height: var(--marker-size);
+      background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3Cg%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%272%27%3E%0A%20%20%20%20%3Cpath%20d%3D%27M50%206%20l8%20-4%20l2%202%20l-4%208%27%20/%3E%0A%20%20%20%20%3Cpath%20d%3D%27M46%2010%20l10%20-6%20l4%204%20l-6%2010%27%20/%3E%0A%20%20%3C/g%3E%0A%20%20%3Cpath%20d%3D%27M36%2020%20l10%20-10%20l8%208%20l-10%2010%20z%27%20fill%3D%27%2523e74c3c%27%20stroke%3D%27%2523999%27%20stroke-width%3D%271%27/%3E%0A%20%20%3Ccircle%20cx%3D%2720%27%20cy%3D%2744%27%20r%3D%2714%27%20fill%3D%27%2523c0392b%27%20stroke%3D%27%2523999%27%20stroke-width%3D%271%27%20/%3E%0A%20%20%3Ccircle%20cx%3D%2720%27%20cy%3D%2744%27%20r%3D%276%27%20fill%3D%27%2523ecf0f1%27%20stroke%3D%27%2523999%27%20stroke-width%3D%271%27%20/%3E%0A%20%20%3Cpath%20d%3D%27M30%2034%20l6%20-6%27%20stroke%3D%27%2523999%27%20stroke-width%3D%273%27%20/%3E%0A%3C/svg%3E');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: transform .15s ease, filter .15s ease;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+      cursor: pointer;
+    }
+    .guitar-marker:hover { transform: scale(1.15); filter: drop-shadow(0 2px 4px rgba(0,0,0,.45)); }
   </style>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
 </head>
 <body>
 <div id="controls">
-  <button id="resetBtn">Reset Filters</button>
+  <button id="resetBtn" title="Reset all filters">Reset Filters</button>
   <select id="countrySelect"><option>All</option></select>
   <select id="monthSelect"><option>All</option></select>
 </div>
 <div id="map"></div>
+
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiYXJhbmV0IiwiYSI6ImNtZHI1eHoxNjBkeDkybnNibm9nMmpiOGoifQ.fAtpWpVeQgSG8XivujRiHw';
+
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v11',
+  style: 'mapbox://styles/mapbox/dark-v11',
   center: [10, 50],
   zoom: 3
 });
 
-// Log any map errors
 map.on('error', e => console.error('Mapbox error:', e && e.error));
 
 let allData = [];
+let activeMarkers = [];
 
 function populateFilters(data) {
   const countries = [...new Set(data.map(e => e.country))].sort();
   const months = [...new Set(data.map(e => e.date.slice(0,7)))].sort();
   const countrySelect = document.getElementById("countrySelect");
   const monthSelect = document.getElementById("monthSelect");
-  countries.forEach(c => countrySelect.innerHTML += `<option>${c}</option>`);
-  months.forEach(m => monthSelect.innerHTML += `<option>${m}</option>`);
+  countries.forEach(c => countrySelect.innerHTML += `<option>{c}</option>`.replace('{c}', c));
+  months.forEach(m => monthSelect.innerHTML += `<option>{m}</option>`.replace('{m}', m));
 }
 
 function filterEvents(data) {
@@ -66,21 +81,29 @@ function filterEvents(data) {
   );
 }
 
+function clearMarkers() {
+  activeMarkers.forEach(m => m.remove());
+  activeMarkers = [];
+}
+
+function makeGuitarMarker() {
+  const el = document.createElement('div');
+  el.className = 'guitar-marker';
+  return el;
+}
+
 function updateMap(events) {
-  document.querySelectorAll('.marker').forEach(m => m.remove());
+  clearMarkers();
   events.forEach(e => {
-    const el = document.createElement('div');
-    el.className = 'marker';
-    el.style.width = '12px';
-    el.style.height = '12px';
-    el.style.backgroundColor = 'red';
-    el.style.borderRadius = '50%';
-    new mapboxgl.Marker(el)
+    const el = makeGuitarMarker();
+    el.title = `${e.artist} – ${e.venue}, ${e.city}`;
+    const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' })
       .setLngLat([e.lon, e.lat])
       .setPopup(new mapboxgl.Popup().setHTML(
         `<strong>${e.artist}</strong><br>${e.city}, ${e.venue}<br>${e.date}<br><a href="${e.ticket_url}" target="_blank">Tickets</a>`
       ))
       .addTo(map);
+    activeMarkers.push(marker);
   });
 }
 
