@@ -1,30 +1,56 @@
 # 🎸 RockMap
 
-![RockMap logga](assets/img/rockmap-logo.png)
+[![RockMap Logo](assets/img/rockmap-logo.png)](https://randomizer.github.io/rockmap/)
 
-RockMap är en interaktiv karta som visar konserter för aktiva rock- och hårdrockband.  
-Projektet hämtar data från externa API:er (t.ex. Bandsintown) och visualiserar spelningar på en Leaflet‑karta.
-
----
-
-## 🌐 Live-demo
-
-[**Öppna RockMap på GitHub Pages →**](https://randomizer.github.io/rockmap/)
+RockMap is an interactive map visualizing concerts for active rock and metal bands.  
+The project fetches event data from external APIs (e.g., Bandsintown) and displays the shows on a Leaflet-based map.
 
 ---
 
-## ✨ Funktioner
+## 🌐 Live Demo
 
-- Interaktiv **Leaflet-karta** med mörkt tema  
-- **Vita markörer** med glow-effekt  
-- **Popup med bandinformation**:
-  - Bandnamn
-  - Spelplats, stad och land
-  - Datum
-  - **Spotify-länk** till bandet  
-- **Logga längst ned till höger** med diskret skugga
+[**Open RockMap on GitHub Pages →**](https://randomizer.github.io/rockmap/)
 
 ---
 
-## 📂 Projektstruktur
+## ✨ Features
+
+- Interactive **Leaflet map** with dark theme  
+- **White glowing markers** for events  
+- **Popup with band information**, including:
+  - Band name
+  - Venue, city, and country
+  - Date of the show
+  - **Direct Spotify link** to the band  
+- **Bottom-right logo overlay** with subtle drop shadow
+
+---
+## 📂 Project Structure
+
+rockmap/
+├─ index.html
+├─ README.md
+├─ assets/
+│ └─ img/
+│ ├─ rockmap-logo.png
+│ ├─ marker-glow.svg
+│ └─ (optional) marker-glow.png
+├─ js/
+│ ├─ main.js
+│ └─ bandImages.js
+├─ css/
+│ └─ style.css
+├─ data/
+│ └─ bands.json
+└─ events.json
+
+
+---
+
+## ⚡ Tips
+
+- Always **bump the `?v=` version** in `index.html` when updating `main.js` or CSS to avoid browser caching issues.  
+- Use the **diag.html** page for debugging if you see a blank page – it logs all loaded files and HTTP statuses.
+
+## 📂 Project Structure
 
