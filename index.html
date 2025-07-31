@@ -2,40 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-  <title>RockMap</title>
-
-  <!-- Din lokala CSS (lägg gärna ett versionssuffix för cache-busting) -->
-  <link rel="stylesheet" href="css/style.css?v=2025-08-01-a" />
-
-  <!-- Leaflet CSS/JS från CDN -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RockMap 3D</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
   <style>
-    /* Säkerställ att kartan fyller skärmen även utan extern CSS */
-    html, body { height: 100%; margin: 0; }
-    #map { width: 100%; height: 100vh; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    #map { width: 100%; height: 100%; }
+    #logo-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 999;
+    }
+    #logo-container img {
+      height: 40px;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+    }
+    #toggle3d {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      padding: 6px 12px;
+      background: #222;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
   </style>
 </head>
 <body>
-  <noscript>
-    RockMap kräver JavaScript för att fungera. Vänligen aktivera JavaScript i din
-    webbläsare.
-  </noscript>
-
+  <div id="logo-container">
+    <img src="assets/img/rockmap-logo.svg" alt="RockMap Logo" />
+  </div>
+  <button id="toggle3d">Toggle 3D</button>
   <div id="map"></div>
-
-  <!-- Viktigt: bandImages före main -->
-  <script src="js/bandImages.js?v=2025-08-01-a"></script>
-
-  <!-- Huvudskript med filnamns-versionering (bypassar CDN-cache) -->
-  <script src="js/main.js?v=2025-08-01-ascii-8"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script src="js/main.js?v=3d-test"></script>
 </body>
 </html>
