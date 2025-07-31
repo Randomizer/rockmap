@@ -1,0 +1,42 @@
+[
+  {
+    "artist": "Metallica",
+    "date": "2025-08-12",
+    "venue": "Olympiastadion",
+    "city": "Berlin",
+    "country": "Germany",
+    "lat": 52.5146,
+    "lon": 13.2392,
+    "ticket_url": "https://example.com/tickets/metallica-berlin"
+  },
+  {
+    "artist": "Coldplay",
+    "date": "2025-08-15",
+    "venue": "Stade de France",
+    "city": "Paris",
+    "country": "France",
+    "lat": 48.9245,
+    "lon": 2.3601,
+    "ticket_url": "https://example.com/tickets/coldplay-paris"
+  },
+  {
+    "artist": "Rammstein",
+    "date": "2025-08-20",
+    "venue": "Friends Arena",
+    "city": "Stockholm",
+    "country": "Sweden",
+    "lat": 59.3727,
+    "lon": 18.0009,
+    "ticket_url": "https://example.com/tickets/rammstein-stockholm"
+  },
+  {
+    "artist": "The Killers",
+    "date": "2025-09-05",
+    "venue": "3Arena",
+    "city": "Dublin",
+    "country": "Ireland",
+    "lat": 53.3489,
+    "lon": -6.2288,
+    "ticket_url": "https://example.com/tickets/the-killers-dublin"
+  }
+]

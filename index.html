@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>RockMap – Var spelar banden?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    #controls {
+      position: absolute;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      margin: 10px;
+      border-radius: 6px;
+    }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    label { margin-right: 5px; }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label for="monthSelect">Månad:</label>
+    <select id="monthSelect">
+      <option value="All">Alla</option>
+    </select>
+
+    <label for="countrySelect">Land:</label>
+    <select id="countrySelect">
+      <option value="All">Alla</option>
+    </select>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYXJhbmV0IiwiYSI6ImNtZHI1eHoxNjBkeDkybnNibm9nMmpiOGoifQ.fAtpWpVeQgSG8XivujRiHw';
+
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [10, 50],
+      zoom: 3
+    });
+
+    let allMarkers = [];
+    let allData = [];
+
+    function clearMarkers() {
+      allMarkers.forEach(marker => marker.remove());
+      allMarkers = [];
+    }
+
+    function updateMap(events) {
+      clearMarkers();
+      events.forEach(event => {
+        const marker = new mapboxgl.Marker()
+          .setLngLat([event.lon, event.lat])
+          .setPopup(
+            new mapboxgl.Popup({ offset: 25 })
+              .setHTML(`
+                <strong>${event.artist}</strong><br/>
+                ${event.venue}, ${event.city}<br/>
+                ${event.date}<br/>
+                <a href="${event.ticket_url}" target="_blank">Biljetter</a>
+              `)
+          )
+          .addTo(map);
+        allMarkers.push(marker);
+      });
+    }
+
+    function filterEvents(data) {
+      const month = document.getElementById("monthSelect").value;
+      const country = document.getElementById("countrySelect").value;
+      return data.filter(event =>
+        (month === "All" || event.date.startsWith(month)) &&
+        (country === "All" || event.country === country)
+      );
+    }
+
+    function populateFilters(data) {
+      const countrySelect = document.getElementById("countrySelect");
+      const monthSelect = document.getElementById("monthSelect");
+
+      const countries = [...new Set(data.map(e => e.country))].sort();
+      countries.forEach(country => {
+        const opt = document.createElement("option");
+        opt.value = country;
+        opt.text = country;
+        countrySelect.appendChild(opt);
+      });
+
+      const months = [...new Set(data.map(e => e.date.slice(0, 7)))].sort();
+      months.forEach(month => {
+        const opt = document.createElement("option");
+        opt.value = month;
+        opt.text = month;
+        monthSelect.appendChild(opt);
+      });
+    }
+
+    fetch('events.json')
+      .then(response => response.json())
+      .then(data => {
+        allData = data;
+        populateFilters(allData);
+        updateMap(filterEvents(allData));
+      });
+
+    document.getElementById("monthSelect").addEventListener("change", () => {
+      updateMap(filterEvents(allData));
+    });
+
+    document.getElementById("countrySelect").addEventListener("change", () => {
+      updateMap(filterEvents(allData));
+    });
+  </script>
+</body>
+</html>
