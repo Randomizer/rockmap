@@ -85,7 +85,8 @@ function zoomTo(events) {
   }
   const bounds = new mapboxgl.LngLatBounds();
   events.forEach(e => bounds.extend([e.lon, e.lat]));
-  map.fitBounds(bounds, { padding: 60, maxZoom: 5, duration: 800 });
+  // Removed maxZoom cap so fitBounds can zoom in properly for small extents
+  map.fitBounds(bounds, { padding: 60, duration: 800 });
 }
 
 fetch('events.json')
