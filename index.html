@@ -1,46 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockMap 3D</title>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
-  <style>
-    html, body { margin: 0; padding: 0; height: 100%; }
-    #map { width: 100%; height: 100%; }
-    #logo-container {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 999;
-    }
-    #logo-container img {
-      height: 40px;
-      width: auto;
-      display: block;
-      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
-    }
-    #toggle3d {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 1000;
-      padding: 6px 12px;
-      background: #222;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      font-family: sans-serif;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>RockMap</title>
+    <link href="css/style.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
 </head>
 <body>
-  <div id="logo-container">
-    <img src="assets/img/rockmap-logo.svg" alt="RockMap Logo" />
-  </div>
-  <button id="toggle3d">Toggle 3D</button>
-  <div id="map"></div>
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-  <script src="js/main.js?v=3d-test"></script>
+    <header>
+        <img src="img/rockmap-logo.png" alt="RockMap Logo" id="logo" />
+        <button id="menu-toggle">☰</button>
+    </header>
+    <div id="filter-box" class="hidden">
+        <h3>Filter</h3>
+        <!-- Här kan filterkomponenter läggas in senare -->
+        <p>Filtrering kommer snart!</p>
+    </div>
+    <div id="map"></div>
+    <script src="js/main.js"></script>
+<div id="version-label">v1.0</div>
 </body>
 </html>
