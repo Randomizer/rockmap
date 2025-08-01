@@ -14,18 +14,19 @@
 </head>
 <body>
     <h1>RockMap API Test</h1>
-    <label for="bandInput">Bandnamn:</label>
+    <label for="bandInput">Band name:</label>
     <input type="text" id="bandInput" value="The Killers">
-    <button onclick="loadData()">Hämta data</button>
+    <button onclick="loadData()">Fetch data</button>
 
     <div id="band-info" style="display:none;">
         <h2 id="band-name"></h2>
         <img id="band-image" src="" alt="" />
         <p id="band-bio"></p>
-        <p><a id="spotify-link" href="#" target="_blank">Öppna i Spotify</a></p>
+        <p><strong>🎤 Next gig:</strong><br><span id="next-gig"></span></p>
+        <p><a id="spotify-link" href="#" target="_blank">Open in Spotify</a></p>
     </div>
 
-    <pre id="output">Ingen data ännu.</pre>
+    <pre id="output">No data yet.</pre>
 
     <script>
         async function loadData() {
@@ -33,7 +34,7 @@
             if (!bandName) return;
 
             document.getElementById("band-info").style.display = "none";
-            document.getElementById("output").textContent = "Hämtar data...";
+            document.getElementById("output").textContent = "Fetching data...";
 
             const bandData = {
                 name: bandName,
@@ -57,7 +58,7 @@
                     longitude: e.venue.longitude
                 }));
             } catch (err) {
-                console.warn("Bandsintown-fel:", err);
+                console.warn("Bandsintown error:", err);
             }
 
             // Fetch Last.fm
@@ -71,22 +72,31 @@
                     bandData.bio = data.artist.bio?.summary || null;
                 }
             } catch (err) {
-                console.warn("Last.fm-fel:", err);
+                console.warn("Last.fm error:", err);
             }
 
             // Update UI
             document.getElementById("band-info").style.display = "block";
             document.getElementById("band-name").textContent = bandData.name;
-            document.getElementById("band-bio").innerHTML = bandData.bio || "(Ingen biografi hittad)";
+            document.getElementById("band-bio").innerHTML = bandData.bio || "(No biography found)";
             document.getElementById("band-image").src = bandData.image || "";
             document.getElementById("band-image").alt = bandData.name;
             document.getElementById("spotify-link").href = bandData.spotify;
 
-            // JSON output
+            const nextGigElement = document.getElementById("next-gig");
+            if (bandData.events.length > 0) {
+                const next = bandData.events[0];
+                const date = new Date(next.date).toLocaleDateString(undefined, {
+                    year: 'numeric', month: 'short', day: 'numeric'
+                });
+                nextGigElement.textContent = `${date} – ${next.city}, ${next.country}`;
+            } else {
+                nextGigElement.textContent = "No information about upcoming gigs";
+            }
+
             document.getElementById("output").textContent = JSON.stringify(bandData, null, 2);
         }
 
-        // Kör första laddningen direkt
         loadData();
     </script>
 </body>
