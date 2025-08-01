@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RockMap API Test – Interaktiv</title>
+    <style>
+        body { font-family: sans-serif; padding: 2em; background: #f4f4f4; }
+        input, button { padding: 0.5em; font-size: 1em; }
+        #band-info { margin-top: 2em; background: #fff; padding: 1em; border-radius: 6px; }
+        img { max-width: 200px; display: block; margin-top: 1em; }
+        pre { background: #eef; padding: 1em; border-radius: 6px; overflow-x: auto; margin-top: 2em; }
+        h2 { margin-top: 1em; }
+    </style>
+</head>
+<body>
+    <h1>RockMap API Test</h1>
+    <label for="bandInput">Bandnamn:</label>
+    <input type="text" id="bandInput" value="The Killers">
+    <button onclick="loadData()">Hämta data</button>
+
+    <div id="band-info" style="display:none;">
+        <h2 id="band-name"></h2>
+        <img id="band-image" src="" alt="" />
+        <p id="band-bio"></p>
+        <p><a id="spotify-link" href="#" target="_blank">Öppna i Spotify</a></p>
+    </div>
+
+    <pre id="output">Ingen data ännu.</pre>
+
+    <script>
+        async function loadData() {
+            const bandName = document.getElementById("bandInput").value.trim();
+            if (!bandName) return;
+
+            document.getElementById("band-info").style.display = "none";
+            document.getElementById("output").textContent = "Hämtar data...";
+
+            const bandData = {
+                name: bandName,
+                image: null,
+                bio: null,
+                spotify: `https://open.spotify.com/search/${encodeURIComponent(bandName)}`,
+                events: []
+            };
+
+            // Fetch Bandsintown
+            try {
+                const biUrl = `https://rest.bandsintown.com/artists/${encodeURIComponent(bandName)}/events?app_id=rockmap`;
+                const biRes = await fetch(biUrl);
+                const biData = await biRes.json();
+                bandData.events = biData.map(e => ({
+                    date: e.datetime,
+                    venue: e.venue.name,
+                    city: e.venue.city,
+                    country: e.venue.country,
+                    latitude: e.venue.latitude,
+                    longitude: e.venue.longitude
+                }));
+            } catch (err) {
+                console.warn("Bandsintown-fel:", err);
+            }
+
+            // Fetch Last.fm
+            try {
+                const lastfmKey = "b25b959554ed76058ac220b7b2e0a026";
+                const lastfmUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(bandName)}&api_key=${lastfmKey}&format=json`;
+                const res = await fetch(lastfmUrl);
+                const data = await res.json();
+                if (data.artist) {
+                    bandData.image = data.artist.image?.pop()["#text"] || null;
+                    bandData.bio = data.artist.bio?.summary || null;
+                }
+            } catch (err) {
+                console.warn("Last.fm-fel:", err);
+            }
+
+            // Update UI
+            document.getElementById("band-info").style.display = "block";
+            document.getElementById("band-name").textContent = bandData.name;
+            document.getElementById("band-bio").innerHTML = bandData.bio || "(Ingen biografi hittad)";
+            document.getElementById("band-image").src = bandData.image || "";
+            document.getElementById("band-image").alt = bandData.name;
+            document.getElementById("spotify-link").href = bandData.spotify;
+
+            // JSON output
+            document.getElementById("output").textContent = JSON.stringify(bandData, null, 2);
+        }
+
+        // Kör första laddningen direkt
+        loadData();
+    </script>
+</body>
+</html>
