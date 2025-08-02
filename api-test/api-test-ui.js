@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const nextLocation = band.nextGigLocation;
 
       let html = "";
+      html += `<button class="close-top-right" onclick="flipCard(false)">×</button>` + html;
 
       if (image) {
         html += `<img src="${image}" class="band-image" alt="${band.name}" />`;
