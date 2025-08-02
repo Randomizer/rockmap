@@ -31,10 +31,10 @@ img.band-image {
 }
 .flipper {
   position: relative;
-  transition: transform 0.6s;
   transform-style: preserve-3d;
+  transition: transform 0.6s;
 }
-.flip-container:hover .flipper {
+.flip-container.flipped .flipper {
   transform: rotateY(180deg);
 }
 .front, .back {
@@ -49,4 +49,23 @@ img.band-image {
 }
 .back {
   transform: rotateY(180deg);
+}
+.more-info-btn {
+  margin-top: 12px;
+  background: none;
+  border: 1px solid #444;
+  color: #ccc;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5em;
+  cursor: pointer;
 }

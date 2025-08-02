@@ -1,3 +1,13 @@
+
+function flipCard(showBack) {
+  const container = document.getElementById("flip-container");
+  if (showBack) {
+    container.classList.add("flipped");
+  } else {
+    container.classList.remove("flipped");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("popup-container");
 
@@ -33,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </svg>
           <strong>Spotify:</strong> <a href="${band.spotify}" target="_blank">Open in Spotify</a>
         </p>
+        <button class="more-info-btn" onclick="flipCard(true)">More info</button>
       `;
     })
     .catch(err => {
