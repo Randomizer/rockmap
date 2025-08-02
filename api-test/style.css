@@ -71,3 +71,7 @@ body {
 .close-top-right:hover {
   color: #fff;
 }
+
+.popup-container {
+  position: relative;
+}

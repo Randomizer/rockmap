@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const nextLocation = band.nextGigLocation;
 
       let html = "";
-      html += `<button class="close-top-right" onclick="flipCard(false)">×</button>` + html;
+      html += `<button class="close-top-right" onclick="closePopup()">×</button>` + html;
 
       if (image) {
         html += `<img src="${image}" class="band-image" alt="${band.name}" />`;
@@ -67,3 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("API fetch error:", err);
     });
 });
+
+function closePopup() {
+  const card = document.getElementById("flip-container");
+  if (card) {
+    card.style.display = "none";
+  }
+}
