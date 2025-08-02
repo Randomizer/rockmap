@@ -1,7 +1,45 @@
+
 body {
   background-color: #111;
   font-family: sans-serif;
   color: #fff;
   padding: 40px;
   margin: 0;
+}
+
+.card-container {
+  perspective: 1000px;
+  max-width: 400px;
+  margin: auto;
+}
+
+.card {
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+  position: relative;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background: rgba(34, 34, 34, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.card-front {
+  z-index: 2;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  z-index: 1;
 }
