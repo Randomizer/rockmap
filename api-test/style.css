@@ -74,3 +74,17 @@ img.band-image {
   font-size: 1.5em;
   cursor: pointer;
 }
+
+.back-btn {
+  margin-top: 20px;
+  background-color: #333;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+.back-btn:hover {
+  background-color: #444;
+}
