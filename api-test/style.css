@@ -28,6 +28,7 @@ img.band-image {
 .flip-container {
   perspective: 1000px;
   width: 400px;
+  position: relative;
 }
 .flipper {
   position: relative;
@@ -51,13 +52,17 @@ img.band-image {
   transform: rotateY(180deg);
 }
 .more-info-btn {
-  margin-top: 12px;
-  background: none;
-  border: 1px solid #444;
-  color: #ccc;
-  padding: 6px 12px;
-  border-radius: 6px;
+  margin-top: 16px;
+  background-color: #333;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 0.95em;
+}
+.more-info-btn:hover {
+  background-color: #444;
 }
 .close-btn {
   position: absolute;
