@@ -1,11 +1,9 @@
+// JS logic for rendering popup based on fetched API test data
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("popup-container");
 
   fetch("band-data-API.json")
-    .then(res => {
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
       const band = data.bands[0];
 
@@ -23,4 +21,3 @@ document.addEventListener("DOMContentLoaded", () => {
       container.innerHTML = "<p style='color:red;'>Failed to load band data.</p>";
       console.error("API fetch error:", err);
     });
-});
