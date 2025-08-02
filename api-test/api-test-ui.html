@@ -2,13 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>RockMap API Test UI v1.6.1</title>
+  <title>RockMap API Test UI v1.6.2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1 style="font-family: sans-serif; color: #fff;">API Test for RockMap Popups – v1.6.1</h1>
-  <div id="popup-container"></div>
+  <h1 style="font-family: sans-serif; color: #fff;">API Test for RockMap Popups – v1.6.2</h1>
+  <div class="flip-container" id="flip-container">
+    <div class="flipper" id="flipper">
+      <div class="front" id="popup-container"></div>
+      <div class="back">
+        <h2>More about the band</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget arcu nec sapien egestas bibendum.</p>
+      </div>
+    </div>
+  </div>
   <script src="api-test-ui.js"></script>
 </body>
 </html>

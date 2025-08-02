@@ -6,22 +6,47 @@ body {
   padding: 40px;
   margin: 0;
 }
-.icon {
+a {
+  color: #1DB954;
+  text-decoration: none;
+}
+.icon, .spotify-icon {
   width: 1.2em;
   height: 1.2em;
-  stroke: #fff;
-  stroke-width: 2;
-  fill: none;
   vertical-align: middle;
   margin-right: 6px;
 }
 .spotify-icon {
   width: 1.4em;
-  height: 1.4em;
-  vertical-align: middle;
-  margin-right: 6px;
 }
-a {
-  color: #1DB954;
-  text-decoration: none;
+img.band-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+}
+.flip-container {
+  perspective: 1000px;
+  width: 400px;
+}
+.flipper {
+  position: relative;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.flip-container:hover .flipper {
+  transform: rotateY(180deg);
+}
+.front, .back {
+  background: #222;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  padding: 20px;
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%;
+  min-height: 280px;
+}
+.back {
+  transform: rotateY(180deg);
 }
