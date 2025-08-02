@@ -2,89 +2,58 @@
 body {
   background-color: #111;
   font-family: sans-serif;
-  color: #fff;
-  padding: 40px;
-  margin: 0;
-}
-a {
-  color: #1DB954;
-  text-decoration: none;
-}
-.icon, .spotify-icon {
-  width: 1.2em;
-  height: 1.2em;
-  vertical-align: middle;
-  margin-right: 6px;
-}
-.spotify-icon {
-  width: 1.4em;
-}
-img.band-image {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 12px 12px 0 0;
+  color: #eee;
+  padding: 20px;
 }
 .flip-container {
   perspective: 1000px;
-  width: 400px;
-  position: relative;
 }
 .flipper {
   position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  transition: 0.6s;
   transform-style: preserve-3d;
-  transition: transform 0.6s;
 }
-.flip-container.flipped .flipper {
+.flipped .flipper {
   transform: rotateY(180deg);
 }
 .front, .back {
-  background: #222;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  padding: 20px;
-  backface-visibility: hidden;
   position: absolute;
   width: 100%;
-  min-height: 280px;
+  backface-visibility: hidden;
+  padding: 20px;
+  border-radius: 12px;
+  background: #222;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
 }
 .back {
   transform: rotateY(180deg);
 }
-.more-info-btn {
+.band-image {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.more-info-btn, .back-btn, .close-btn {
   margin-top: 16px;
   background-color: #333;
   color: #fff;
-  padding: 8px 14px;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.95em;
 }
-.more-info-btn:hover {
-  background-color: #444;
+.icon, .spotify-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 6px;
+  fill: #fff;
 }
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.5em;
-  cursor: pointer;
-}
-
-.back-btn {
-  margin-top: 20px;
-  background-color: #333;
-  color: #fff;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.95em;
-}
-.back-btn:hover {
-  background-color: #444;
+.spotify-icon {
+  border-radius: 50%;
 }
