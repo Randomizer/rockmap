@@ -1,4 +1,4 @@
-// main.js – RockMap v1.6 with Bandsintown API
+// main.js – RockMap v1.6 with Bandsintown API & dynamic artist images
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 const map = new mapboxgl.Map({
@@ -8,17 +8,15 @@ const map = new mapboxgl.Map({
   zoom: ROCKMAP_CONFIG.defaultZoom
 });
 
-// The artists you want to show on the map
+// The artists to load (only name and Spotify required)
 const artists = [
   {
     name: "Metallica",
-    spotify: "https://open.spotify.com/artist/2ye2Wgw4gimLv2eAKyk1NB",
-    image: "assets/img/metallica.jpg"
+    spotify: "https://open.spotify.com/artist/2ye2Wgw4gimLv2eAKyk1NB"
   },
   {
     name: "Coldplay",
-    spotify: "https://open.spotify.com/artist/4gzpq5DPGxSnKTe4SA8HAU",
-    image: "assets/img/coldplay.jpg"
+    spotify: "https://open.spotify.com/artist/4gzpq5DPGxSnKTe4SA8HAU"
   }
 ];
 
@@ -32,20 +30,28 @@ let popupState = {
   bandImage: null,
 };
 
-// Load all gigs for all artists from Bandsintown
+// Load all gigs for all artists from Bandsintown and their images
 async function loadAndShowGigs() {
   for (const artist of artists) {
     try {
-      const response = await fetch(`https://rest.bandsintown.com/artists/${encodeURIComponent(artist.name)}/events?app_id=rockmapdemo&date=upcoming`);
-      if (!response.ok) throw new Error("API error");
-      const events = await response.json();
+      // 1. Fetch artist info for image
+      const artistInfoResponse = await fetch(
+        `https://rest.bandsintown.com/artists/${encodeURIComponent(artist.name)}?app_id=rockmapdemo`
+      );
+      const artistInfo = await artistInfoResponse.json();
+      const imageUrl = artistInfo.image_url || "assets/img/marker.png";
 
-      // Only proceed if we get an array
+      // 2. Fetch events
+      const eventsResponse = await fetch(
+        `https://rest.bandsintown.com/artists/${encodeURIComponent(artist.name)}/events?app_id=rockmapdemo&date=upcoming`
+      );
+      if (!eventsResponse.ok) throw new Error("API error");
+      const events = await eventsResponse.json();
+
       if (!Array.isArray(events)) continue;
 
-      // Add a marker for each event
+      // 3. Add a marker for each event
       events.forEach((event, i) => {
-        // Only plot if location exists
         if (event.venue && event.venue.latitude && event.venue.longitude) {
           const gig = {
             date: event.datetime.slice(0, 10),
@@ -79,7 +85,8 @@ async function loadAndShowGigs() {
                 lng: parseFloat(ev.venue.longitude),
                 country: ev.venue.country,
                 region: ev.venue.region
-              }))
+              })),
+              image: imageUrl
             }, gig);
           });
 
