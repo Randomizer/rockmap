@@ -1,4 +1,4 @@
-/ Mapbox access token (replace with your own!)
+// Mapbox access token (replace with your own!)
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYXJhbmV0IiwiYSI6ImNtZHI1eHoxNjBkeDkybnNibm9nMmpiOGoifQ.fAtpWpVeQgSG8XivujRiHw';
 
 const ROCKMAP_CONFIG = {
