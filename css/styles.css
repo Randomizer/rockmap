@@ -29,6 +29,9 @@ body {
   background: rgba(10,12,16,0.38);
   transition: background 0.2s;
 }
+#popup-container:empty {
+  display: none !important;
+}
 
 /* --- Card Styles --- */
 .rockmap-card {
@@ -181,7 +184,3 @@ button.flip-btn:hover, button.back-btn:hover {
 .marker {
   /* In case you want custom marker styling */
 }
-#popup-container:empty {
-  display: none !important;
-}
-
