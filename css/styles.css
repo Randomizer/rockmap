@@ -181,3 +181,7 @@ button.flip-btn:hover, button.back-btn:hover {
 .marker {
   /* In case you want custom marker styling */
 }
+#popup-container:empty {
+  display: none !important;
+}
+
