@@ -1,5 +1,6 @@
-// main.js – RockMap v1.6 (mockdata, ingen API, allt UI funkar)
+// main.js – RockMap v1.6 (mockdata, flip card, popup UI, ENGLISH COMMENTS)
 
+// Set Mapbox token from config.js
 mapboxgl.accessToken = MAPBOX_TOKEN;
 const map = new mapboxgl.Map({
   container: 'map',
@@ -8,7 +9,7 @@ const map = new mapboxgl.Map({
   zoom: ROCKMAP_CONFIG.defaultZoom
 });
 
-// Mockdata för band och gigs
+// Mock band and gig data
 const bands = [
   {
     name: "Metallica",
@@ -30,7 +31,7 @@ const bands = [
   }
 ];
 
-// Popup state
+// State for popup
 let popupState = {
   flipped: false,
   band: null,
@@ -40,9 +41,9 @@ let popupState = {
   bandImage: null
 };
 
-// Add markers for each gig
+// Add map markers for each gig
 bands.forEach(band => {
-  band.gigs.forEach((gig) => {
+  band.gigs.forEach(gig => {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.width = '36px';
@@ -82,16 +83,24 @@ function getNextGig(gigs, currentDate) {
   return next ? next : null;
 }
 
-// Render the popup card
+// Render the popup flip card (front & back)
 function renderPopup() {
   const popupContainer = document.getElementById('popup-container');
   popupContainer.innerHTML = "";
 
+  // Card wrapper
   const card = document.createElement('div');
-  card.className = 'rockmap-card';
-  if (popupState.flipped) card.classList.add('flipped');
+  card.className = 'rockmap-card' + (popupState.flipped ? ' flipped' : '');
 
-  // Close button
+  // Inner wrapper for 3D flip
+  const cardInner = document.createElement('div');
+  cardInner.className = 'card-inner';
+
+  // --- Front Side ---
+  const cardFront = document.createElement('div');
+  cardFront.className = 'card-front';
+
+  // Close button (front)
   const closeBtn = document.createElement('button');
   closeBtn.className = 'close-btn';
   closeBtn.innerHTML = '&times;';
@@ -99,76 +108,92 @@ function renderPopup() {
     popupContainer.innerHTML = "";
     popupState.flipped = false;
   });
-  card.appendChild(closeBtn);
+  cardFront.appendChild(closeBtn);
 
-  // Front Side
-  if (!popupState.flipped) {
-    const img = document.createElement('img');
-    img.className = 'band-image';
-    img.src = popupState.bandImage;
-    img.alt = popupState.band.name;
-    card.appendChild(img);
+  // Band image, name, gig, spotify, flip, next gig (same as before)
+  const img = document.createElement('img');
+  img.className = 'band-image';
+  img.src = popupState.bandImage;
+  img.alt = popupState.band.name;
+  cardFront.appendChild(img);
 
-    const name = document.createElement('div');
-    name.className = 'band-name';
-    name.innerText = popupState.band.name;
-    card.appendChild(name);
+  const name = document.createElement('div');
+  name.className = 'band-name';
+  name.innerText = popupState.band.name;
+  cardFront.appendChild(name);
 
-    const eventDate = document.createElement('div');
-    eventDate.className = 'event-date';
-    eventDate.innerText = `${popupState.selectedGig.date} – ${popupState.selectedGig.city}, ${popupState.selectedGig.venue}`;
-    card.appendChild(eventDate);
+  const eventDate = document.createElement('div');
+  eventDate.className = 'event-date';
+  eventDate.innerText = `${popupState.selectedGig.date} – ${popupState.selectedGig.city}, ${popupState.selectedGig.venue}`;
+  cardFront.appendChild(eventDate);
 
-    if (popupState.spotifyUrl) {
-      const spotify = document.createElement('a');
-      spotify.className = 'spotify-link';
-      spotify.href = popupState.spotifyUrl;
-      spotify.target = "_blank";
-      spotify.innerText = "Listen on Spotify";
-      card.appendChild(spotify);
-    }
-
-    const flipBtn = document.createElement('button');
-    flipBtn.className = 'flip-btn';
-    flipBtn.innerText = "More info";
-    flipBtn.addEventListener('click', () => {
-      popupState.flipped = true;
-      renderPopup();
-    });
-    card.appendChild(flipBtn);
-
-    if (popupState.nextGig) {
-      const nextGigDiv = document.createElement('div');
-      nextGigDiv.className = 'next-gig';
-      nextGigDiv.innerHTML = `<b>Next gig:</b> ${popupState.nextGig.date} – ${popupState.nextGig.city}, ${popupState.nextGig.venue}`;
-      card.appendChild(nextGigDiv);
-    }
-
-  } else {
-    // Back Side
-    const info = document.createElement('div');
-    info.innerHTML = `
-      <div style="margin-bottom:10px;">
-        <b>About the band:</b><br>
-        ${popupState.band.name} is one of the world's leading rock acts.<br>
-      </div>
-      <div>
-        <b>Selected gig:</b><br>
-        ${popupState.selectedGig.date} – ${popupState.selectedGig.city}, ${popupState.selectedGig.venue}
-      </div>
-    `;
-    card.appendChild(info);
-
-    const backBtn = document.createElement('button');
-    backBtn.className = 'back-btn';
-    backBtn.innerText = "Back";
-    backBtn.addEventListener('click', () => {
-      popupState.flipped = false;
-      renderPopup();
-    });
-    card.appendChild(backBtn);
+  if (popupState.spotifyUrl) {
+    const spotify = document.createElement('a');
+    spotify.className = 'spotify-link';
+    spotify.href = popupState.spotifyUrl;
+    spotify.target = "_blank";
+    spotify.innerText = "Listen on Spotify";
+    cardFront.appendChild(spotify);
   }
 
+  const flipBtn = document.createElement('button');
+  flipBtn.className = 'flip-btn';
+  flipBtn.innerText = "More info";
+  flipBtn.addEventListener('click', () => {
+    popupState.flipped = true;
+    renderPopup();
+  });
+  cardFront.appendChild(flipBtn);
+
+  if (popupState.nextGig) {
+    const nextGigDiv = document.createElement('div');
+    nextGigDiv.className = 'next-gig';
+    nextGigDiv.innerHTML = `<b>Next gig:</b> ${popupState.nextGig.date} – ${popupState.nextGig.city}, ${popupState.nextGig.venue}`;
+    cardFront.appendChild(nextGigDiv);
+  }
+
+  // --- Back Side ---
+  const cardBack = document.createElement('div');
+  cardBack.className = 'card-back';
+
+  // Close button (back)
+  const closeBtnBack = document.createElement('button');
+  closeBtnBack.className = 'close-btn';
+  closeBtnBack.innerHTML = '&times;';
+  closeBtnBack.addEventListener('click', () => {
+    popupContainer.innerHTML = "";
+    popupState.flipped = false;
+  });
+  cardBack.appendChild(closeBtnBack);
+
+  // Band info (customize as needed)
+  const info = document.createElement('div');
+  info.innerHTML = `
+    <div style="margin-bottom:10px;">
+      <b>About the band:</b><br>
+      ${popupState.band.name} is one of the world's leading rock acts.<br>
+    </div>
+    <div>
+      <b>Selected gig:</b><br>
+      ${popupState.selectedGig.date} – ${popupState.selectedGig.city}, ${popupState.selectedGig.venue}
+    </div>
+  `;
+  cardBack.appendChild(info);
+
+  // Back button
+  const backBtn = document.createElement('button');
+  backBtn.className = 'back-btn';
+  backBtn.innerText = "Back";
+  backBtn.addEventListener('click', () => {
+    popupState.flipped = false;
+    renderPopup();
+  });
+  cardBack.appendChild(backBtn);
+
+  // Build the card
+  cardInner.appendChild(cardFront);
+  cardInner.appendChild(cardBack);
+  card.appendChild(cardInner);
   popupContainer.appendChild(card);
 }
 
