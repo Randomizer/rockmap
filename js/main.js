@@ -1,4 +1,4 @@
-// main.js – RockMap v1.6 with Bandsintown API & dynamic artist images
+// main.js – RockMap v1.6 (mockdata, ingen API, allt UI funkar)
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 const map = new mapboxgl.Map({
@@ -8,15 +8,25 @@ const map = new mapboxgl.Map({
   zoom: ROCKMAP_CONFIG.defaultZoom
 });
 
-// The artists to load (only name and Spotify required)
-const artists = [
+// Mockdata för band och gigs
+const bands = [
   {
     name: "Metallica",
-    spotify: "https://open.spotify.com/artist/2ye2Wgw4gimLv2eAKyk1NB"
+    image: "assets/img/metallica.jpg",
+    spotify: "https://open.spotify.com/artist/2ye2Wgw4gimLv2eAKyk1NB",
+    gigs: [
+      { date: "2025-08-10", city: "Stockholm", venue: "Friends Arena", lat: 59.505, lng: 17.072 },
+      { date: "2025-10-11", city: "Berlin", venue: "Olympiastadion", lat: 52.514, lng: 13.239 }
+    ]
   },
   {
     name: "Coldplay",
-    spotify: "https://open.spotify.com/artist/4gzpq5DPGxSnKTe4SA8HAU"
+    image: "assets/img/coldplay.jpg",
+    spotify: "https://open.spotify.com/artist/4gzpq5DPGxSnKTe4SA8HAU",
+    gigs: [
+      { date: "2025-09-12", city: "Göteborg", venue: "Ullevi", lat: 57.720, lng: 11.979 },
+      { date: "2025-11-03", city: "London", venue: "Wembley", lat: 51.556, lng: -0.279 }
+    ]
   }
 ];
 
@@ -27,79 +37,32 @@ let popupState = {
   selectedGig: null,
   nextGig: null,
   spotifyUrl: null,
-  bandImage: null,
+  bandImage: null
 };
 
-// Load all gigs for all artists from Bandsintown and their images
-async function loadAndShowGigs() {
-  for (const artist of artists) {
-    try {
-      // 1. Fetch artist info for image
-      const artistInfoResponse = await fetch(
-        `https://rest.bandsintown.com/artists/${encodeURIComponent(artist.name)}?app_id=rockmapdemo`
-      );
-      const artistInfo = await artistInfoResponse.json();
-      const imageUrl = artistInfo.image_url || "assets/img/marker.png";
+// Add markers for each gig
+bands.forEach(band => {
+  band.gigs.forEach((gig) => {
+    const el = document.createElement('div');
+    el.className = 'marker';
+    el.style.width = '36px';
+    el.style.height = '36px';
+    el.style.backgroundImage = "url('assets/img/marker.png')";
+    el.style.backgroundSize = 'cover';
+    el.style.borderRadius = '50%';
+    el.style.cursor = 'pointer';
+    el.title = `${band.name} - ${gig.city}`;
 
-      // 2. Fetch events
-      const eventsResponse = await fetch(
-        `https://rest.bandsintown.com/artists/${encodeURIComponent(artist.name)}/events?app_id=rockmapdemo&date=upcoming`
-      );
-      if (!eventsResponse.ok) throw new Error("API error");
-      const events = await eventsResponse.json();
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showPopup(band, gig);
+    });
 
-      if (!Array.isArray(events)) continue;
-
-      // 3. Add a marker for each event
-      events.forEach((event, i) => {
-        if (event.venue && event.venue.latitude && event.venue.longitude) {
-          const gig = {
-            date: event.datetime.slice(0, 10),
-            city: event.venue.city,
-            venue: event.venue.name,
-            lat: parseFloat(event.venue.latitude),
-            lng: parseFloat(event.venue.longitude),
-            country: event.venue.country,
-            region: event.venue.region
-          };
-
-          const el = document.createElement('div');
-          el.className = 'marker';
-          el.style.width = '36px';
-          el.style.height = '36px';
-          el.style.backgroundImage = "url('assets/img/marker.png')";
-          el.style.backgroundSize = 'cover';
-          el.style.borderRadius = '50%';
-          el.style.cursor = 'pointer';
-          el.title = `${artist.name} - ${gig.city}`;
-
-          el.addEventListener('click', (e) => {
-            e.stopPropagation();
-            showPopup({
-              ...artist,
-              gigs: events.map(ev => ({
-                date: ev.datetime.slice(0, 10),
-                city: ev.venue.city,
-                venue: ev.venue.name,
-                lat: parseFloat(ev.venue.latitude),
-                lng: parseFloat(ev.venue.longitude),
-                country: ev.venue.country,
-                region: ev.venue.region
-              })),
-              image: imageUrl
-            }, gig);
-          });
-
-          new mapboxgl.Marker(el)
-            .setLngLat([gig.lng, gig.lat])
-            .addTo(map);
-        }
-      });
-    } catch (err) {
-      console.error(`Could not load events for ${artist.name}:`, err);
-    }
-  }
-}
+    new mapboxgl.Marker(el)
+      .setLngLat([gig.lng, gig.lat])
+      .addTo(map);
+  });
+});
 
 // Show popup card for selected gig
 function showPopup(band, gig) {
@@ -228,6 +191,3 @@ document.addEventListener('keydown', function(e) {
     }
   }
 });
-
-// Load the map with all gigs from Bandsintown
-loadAndShowGigs();
