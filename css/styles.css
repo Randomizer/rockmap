@@ -1,87 +1,183 @@
-/* RockMap v1.6 - Card & Popup Styles */
-
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #181818;
+  background: #18181c;
+  color: #e3e3ef;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 #map {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
   width: 100vw;
   height: 100vh;
-  position: absolute;
   z-index: 1;
 }
 
-/* Popup-container placering */
+/* --- Popup Container --- */
 #popup-container {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
   display: flex;
-  justify-content: center;
   align-items: center;
-  pointer-events: none;
-  z-index: 10;
+  justify-content: center;
+  background: rgba(10,12,16,0.38);
+  transition: background 0.2s;
 }
 
-/* Card layout */
+/* --- Card Styles --- */
 .rockmap-card {
-  background: #222;
-  color: #f5f5f5;
-  border-radius: 18px;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.6);
-  min-width: 340px;
-  max-width: 420px;
-  padding: 28px 28px 20px 28px;
-  pointer-events: auto;
+  perspective: 1200px;
+  width: 370px;
+  min-height: 360px;
+  background: #232228;
+  border-radius: 24px;
+  box-shadow: 0 6px 28px #000b, 0 1.5px 5px #1114;
+  transform: translateY(-10px);
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  font-size: 1.12rem;
-  transition: transform 0.45s cubic-bezier(.35,.93,.68,1.15);
+  padding: 0;
 }
 
-.rockmap-card.flipped {
+.card-inner {
+  position: relative;
+  width: 100%;
+  min-height: 360px;
+  transition: transform 0.6s cubic-bezier(0.4,0.2,0.2,1);
+  transform-style: preserve-3d;
+}
+
+.rockmap-card.flipped .card-inner {
   transform: rotateY(180deg);
 }
 
-.rockmap-card .close-btn {
+.card-front, .card-back {
   position: absolute;
-  top: 18px;
-  right: 22px;
-  background: transparent;
-  border: none;
-  color: #f86b77;
-  font-size: 2.1rem;
-  cursor: pointer;
-  z-index: 2;
-  transition: color .2s;
+  width: 100%; height: 100%;
+  backface-visibility: hidden;
+  top: 0; left: 0;
+  background: #232228;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 28px 24px 24px 24px;
+  box-sizing: border-box;
 }
-.rockmap-card .close-btn:hover {
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+/* --- Band Image --- */
+.band-image {
+  width: 90%;
+  max-width: 250px;
+  height: auto;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 10px #0008;
+  object-fit: cover;
+  background: #171721;
+}
+
+/* --- Text & Content --- */
+.band-name {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  text-align: center;
   color: #fff;
 }
 
-.rockmap-card .flip-btn, .rockmap-card .back-btn {
-  background: #333;
-  color: #f5f5f5;
-  border: none;
-  padding: 8px 18px;
-  border-radius: 12px;
-  margin-top: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background .2s, color .2s;
-}
-.rockmap-card .flip-btn:hover, .rockmap-card .back-btn:hover {
-  background: #f5f5f5;
-  color: #222;
+.event-date {
+  font-size: 1.12rem;
+  color: #b1bbdf;
+  margin-bottom: 18px;
+  text-align: center;
 }
 
-.rockmap-card .band-image {
-  width: 100%;
-  max-width: 340px;
-  margin: 0 auto 8px auto;
-  display: block;
-  border-radius: 14px;
+.next-gig {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #8cffa7;
+  background: #1a2822;
+  padding: 6px 10px;
+  border-radius: 8px;
+  align-self: stretch;
+  text-align: center;
+}
+
+.spotify-link {
+  display: inline-block;
+  margin: 10px 0 8px 0;
+  background: #1db954;
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 7px 17px;
+  border-radius: 19px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px #1db95433;
+  letter-spacing: 0.03em;
+  transition: background 0.18s;
+}
+.spotify-link:hover {
+  background: #159944;
+  text-decoration: underline;
+}
+
+/* --- Buttons --- */
+button.close-btn {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: none;
+  border: none;
+  color: #fafaff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.84;
+  transition: color 0.12s, opacity 0.15s;
+}
+button.close-btn:hover { color: #ff4f4f; opacity: 1; }
+
+button.flip-btn, button.back-btn {
+  margin: 18px auto 0 auto;
+  background: #2f37fd;
+  color: #fff;
+  border: none;
+  padding: 9px 23px;
+  border-radius: 15px;
+  font-size: 1.03rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 10px #2930fa3c;
+  letter-spacing: 0.04em;
+  transition: background 0.17s, color 0.17s;
+}
+button.flip-btn:hover, button.back-btn:hover {
+  background: #4041b6;
+  color: #fff;
+}
+
+/* --- Responsive --- */
+@media (max-width: 550px) {
+  .rockmap-card {
+    width: 97vw;
+    min-height: 330px;
+    margin: 0 1vw;
+  }
+  .band-image { max-width: 90vw; }
+  .card-front, .card-back { padding: 16px 5vw 18px 5vw; }
+}
+
+.marker {
+  /* In case you want custom marker styling */
+}
