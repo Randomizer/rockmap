@@ -110,7 +110,7 @@ function renderPopup() {
   });
   cardFront.appendChild(closeBtn);
 
-  // Band image, name, gig, spotify, flip, next gig (same as before)
+  // Band image, name, gig, spotify, flip
   const img = document.createElement('img');
   img.className = 'band-image';
   img.src = popupState.bandImage;
@@ -145,11 +145,12 @@ function renderPopup() {
   });
   cardFront.appendChild(flipBtn);
 
+  // NEXT GIG -- This must be inside cardFront for flip to work!
   if (popupState.nextGig) {
     const nextGigDiv = document.createElement('div');
     nextGigDiv.className = 'next-gig';
     nextGigDiv.innerHTML = `<b>Next gig:</b> ${popupState.nextGig.date} – ${popupState.nextGig.city}, ${popupState.nextGig.venue}`;
-    cardFront.appendChild(nextGigDiv);
+    cardFront.appendChild(nextGigDiv); // INSIDE cardFront!
   }
 
   // --- Back Side ---
